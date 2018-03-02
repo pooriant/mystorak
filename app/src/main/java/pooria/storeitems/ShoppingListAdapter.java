@@ -24,10 +24,10 @@ import pooria.storeitems.data.ItemsDbHelper;
  * Created by Po0RiA on 2/11/2018.
  */
 
-public class ShoppingListAdapter extends CursorAdapter {
+class ShoppingListAdapter extends CursorAdapter {
 
   private ItemsDbHelper dbHelper;
-  private ShoppingListAdapter(Context context, Cursor c) {
+  public ShoppingListAdapter(Context context, Cursor c) {
     super(context, c,0);
     dbHelper=new ItemsDbHelper(context);
   }

@@ -358,7 +358,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
       //insert();
       saveItem();
       finish();
-      Toast.makeText(this, "You clicked save button", Toast.LENGTH_SHORT).show();
     }
     if (item.getItemId() == R.id.delete_item) {
 
