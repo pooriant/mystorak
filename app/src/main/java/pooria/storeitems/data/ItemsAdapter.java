@@ -168,7 +168,7 @@ if (mQuantityValue>  0){
   private void addOrUpdateItem_MainList_SellList(Context context, Cursor Cursor_OnMAinList){
 
     //result of search on Sell list, if we have this item on list result is 1 or above then is -1 because we dont have this item on list and should to add on our list
-    Cursor Cursor_SearchReslut_SellList = searchItem_SellList(context, mNameValue,mCategoryValue);
+    Cursor Cursor_SearchReslut_SellList = searchItem_SellList(context, mNameValue);
 
     //if result count is more then 0 means we have this item and must to update that
     if (Cursor_SearchReslut_SellList.getCount() > 0) {
@@ -281,11 +281,11 @@ if (mQuantityValue>  0){
 
   }
 
-  private Cursor searchItem_SellList(Context context, String itemForSearch,int CategoryForSearch) {
+  private Cursor searchItem_SellList(Context context, String itemForSearch) {
 
     //search ITem On Sell List Where NAME is = (itemFor search)>>that item's name we want to search
-    String selection = ItemsContract.ItemsEntry.COLUMN_NAME + "=?" +"+"+ ItemsContract.ItemsEntry.COLUMN_CATEGORY+"=?";
-    String[] selectionArgs = new String[]{itemForSearch,String.valueOf(CategoryForSearch)};
+    String selection = ItemsContract.ItemsEntry.COLUMN_NAME + "=?";
+    String[] selectionArgs = new String[]{itemForSearch};
 
     //make a query on Sell List for finding item with name above
     Cursor resultOfSearch = context.getContentResolver().query(ItemsContract.ItemsEntry.CONTENT_URI_SELL_LIST, null, selection, selectionArgs, null);
