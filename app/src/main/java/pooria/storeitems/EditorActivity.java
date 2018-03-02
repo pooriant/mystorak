@@ -200,7 +200,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
       Toast.makeText(getApplicationContext(), "You don't have permission to access file location!", Toast.LENGTH_SHORT).show();
     }
 
-
     super.onRequestPermissionsResult(requestCode, permissions, grantResults);
   }
 

@@ -41,7 +41,7 @@
         <EditText
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="Mac"
+
             android:layout_gravity="center"
             android:textSize="20sp"
             android:id="@+id/namebox"
@@ -80,7 +80,6 @@
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:text="about produce"
                 android:layout_gravity="center"
                 android:textSize="20sp"
                 android:id="@+id/discriptionbox"
@@ -118,7 +117,6 @@
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:text="500"
                 android:layout_gravity="center"
                 android:textSize="20sp"
                 android:id="@+id/pricebox"
@@ -156,7 +154,6 @@
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:text="8"
                 android:layout_gravity="center"
                 android:textSize="20sp"
                 android:id="@+id/quantitybox"
