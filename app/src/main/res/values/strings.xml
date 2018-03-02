@@ -1,0 +1,27 @@
+<resources>
+    <string name="app_name">StoreItems</string>
+
+    <string name="tech_List">Tech</string>
+    <string name="clothes_List">Clothes</string>
+    <string name="home_List">Home</string>
+
+
+
+
+    <string name="tech_shop1">Apple</string>
+    <string name="tech_shop2">Samsung</string>
+    <string name="tech_shop3">Asus</string>
+    <string name="tech_shop4">Lg</string>
+    <string name="tech_shop5">Sony</string>
+
+
+    <string name="clothes_shop1">CK</string>
+    <string name="clothes_shop2">Lee</string>
+    <string name="clothes_shop3">Levis</string>
+
+    <string name="Home_shop1">City</string>
+    <string name="Home_shop2">Village</string>
+    <string name="Home_shop3">beach</string>
+
+
+</resources>

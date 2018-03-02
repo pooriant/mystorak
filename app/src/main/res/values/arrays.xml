@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="Category_list">
+    <item>@string/tech_List</item>
+    <item>@string/clothes_List</item>
+    <item>@string/home_List</item>
+
+    </string-array>
+
+
+    <string-array name="Tech_shoppers_List">
+        <item>@string/tech_shop1</item>
+        <item>@string/tech_shop2</item>
+        <item>@string/tech_shop3</item>
+        <item>@string/tech_shop4</item>
+        <item>@string/tech_shop5</item>
+    </string-array>
+
+
+    <string-array name="Clothes_shoppers_list">
+        <item>@string/clothes_shop1</item>
+        <item>@string/clothes_shop2</item>
+        <item>@string/clothes_shop3</item>
+
+
+
+    </string-array>
+
+
+
+    <string-array name="Home_shoppers_list">
+    <item>@string/Home_shop1</item>
+    <item>@string/Home_shop2</item>
+    <item>@string/Home_shop3</item>
+    </string-array>
+</resources>
