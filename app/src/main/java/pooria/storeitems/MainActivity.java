@@ -63,8 +63,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
       @Override
       public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Log.i(LOG_TAG, "id is :" + id);
-        Log.i(LOG_TAG, "id is :" + position);
         Intent intent = new Intent(MainActivity.this, EditorActivity.class);
         Uri uri = ContentUris.withAppendedId(ItemsContract.ItemsEntry.CONTENT_URI, id);
         intent.setData(uri);
@@ -152,7 +150,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
   @Override
   public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-    Log.e(LOG_TAG, "LoaderOnLoad Finish");
     itemsAdapter.swapCursor(data);
 
 
@@ -160,7 +157,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
   @Override
   public void onLoaderReset(Loader<Cursor> loader) {
-    Log.e(LOG_TAG, "LoaderOnLoad Reset");
     itemsAdapter.swapCursor(null);
 
   }

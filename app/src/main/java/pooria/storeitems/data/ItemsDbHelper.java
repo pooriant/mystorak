@@ -42,18 +42,7 @@ public class ItemsDbHelper extends SQLiteOpenHelper {
   @Override
   public void onCreate(SQLiteDatabase db) {
     // Create a String that contains the SQL statement to create the pets table
-/*
-    String SQL_CREATE_ITEMS_TABLE="CREATE TABLE "+ItemsEntry.TABLE_NAME_ITEMS +"("
-      +ItemsEntry.ID+" INTEGER PRIMARY KEY AUTOINCREMENT, "
-      +ItemsEntry.COLUMN_NAME+" TEXT NOT NULL, "
-      +ItemsEntry.COLUMN_DESCRIPTION+" TEXT, "
-      +ItemsEntry.COLUMN_PRICE+" INTEGER NOT NULL, "
-      +ItemsEntry.COLUMN_QUANTITY+ " INTEGER NOT NULL, "
-      +ItemsEntry.COLUMN_SUPPLIER+ " INTEGER NOT NULL, "
-      +ItemsEntry.COLUMN_CATEGORY+ " INTEGER NOT NULL, "
-      +ItemsEntry.COLUMN_IMAGE+ " BLOB );" ;
 
-  */
     String SQL_CREATE_ITEMS_TABLE="CREATE TABLE "+ItemsEntry.TABLE_NAME_ITEMS +"("
       +ItemsEntry.ID+" INTEGER PRIMARY KEY AUTOINCREMENT, "
       +ItemsEntry.COLUMN_NAME+" TEXT NOT NULL, "

@@ -26,9 +26,8 @@ import pooria.storeitems.data.ItemsDbHelper;
 
 public class ShoppingListAdapter extends CursorAdapter {
 
-  ItemsDbHelper dbHelper;
-  byte imageinByte[];
-  public ShoppingListAdapter(Context context, Cursor c) {
+  private ItemsDbHelper dbHelper;
+  private ShoppingListAdapter(Context context, Cursor c) {
     super(context, c,0);
     dbHelper=new ItemsDbHelper(context);
   }
@@ -62,7 +61,7 @@ int currentPosition=cursor.getPosition();
       int price=cursor.getInt(priceId);
       int quantity=cursor.getInt(quantityId);
 
-      imageinByte=cursor.getBlob(imageId);
+    byte imageinByte[] =cursor.getBlob(imageId);
 
     ByteArrayInputStream inputStream=new ByteArrayInputStream(imageinByte);
     Bitmap bitmap= BitmapFactory.decodeStream(inputStream);
@@ -75,8 +74,6 @@ int currentPosition=cursor.getPosition();
     quantityView.setText(String.valueOf(quantity));
 
 
-    int id=cursor.getInt(cursor.getColumnIndex(ItemsContract.ItemsEntry._ID));
 
-    Log.i("ShoppingListAdapter",": "+id);
   }
 }

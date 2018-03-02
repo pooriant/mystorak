@@ -10,7 +10,6 @@ import android.support.annotation.Nullable;
 
 
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.CursorAdapter;
@@ -58,7 +57,6 @@ mListView=(ListView)findViewById(R.id.sell_list_view);
     {
 
      int rowDeleted= getContentResolver().delete(ItemsContract.ItemsEntry.CONTENT_URI_SELL_LIST,null,null);
-      Log.i(LOG_TAG,"DELETED : "+rowDeleted);
     }
 
     return super.onOptionsItemSelected(item);

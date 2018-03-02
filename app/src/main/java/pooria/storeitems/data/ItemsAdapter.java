@@ -26,12 +26,12 @@ import pooria.storeitems.R;
 
 
 public class ItemsAdapter extends CursorAdapter {
-  ItemsDbHelper dbHelper;
-  String mNameValue;
-  int mCategoryValue;
-  int mPriceValue;
-  byte imageInByte[];
-  int mQuantityValue;
+  private ItemsDbHelper dbHelper;
+  private String mNameValue;
+ private  int mCategoryValue;
+ private  int mPriceValue;
+ private  byte imageInByte[];
+ private  int mQuantityValue;
 
   private final String LOG_TAG = ItemsAdapter.class.getName();
 
@@ -55,7 +55,6 @@ public class ItemsAdapter extends CursorAdapter {
   public void bindView(View view, final Context context, final Cursor cursor) {
 
     final int mCursorPosition = cursor.getPosition();
-    Log.e(LOG_TAG, "mCursorPosition :" + cursor.getPosition());
 
 
     //initialize Views for title and description;
@@ -94,7 +93,6 @@ public class ItemsAdapter extends CursorAdapter {
 
     mCategoryValue = cursor.getInt(categoryName);
 
-    Log.i(LOG_TAG, "mcategory: " + mCategoryValue);
     if (mCategoryValue == 0) {
 
       sellerView.setText(R.string.tech_List);
@@ -182,11 +180,9 @@ if (mQuantityValue>  0){
 
       //we dont have this item then add to list
     } else {
-      Toast.makeText(context, "we dont have this item in Sell list", Toast.LENGTH_SHORT).show();
       //add item to Sell list
       add_SellList(context);
 
-      Toast.makeText(context, mNameValue+ " IS Going To Update On Main List " , Toast.LENGTH_SHORT).show();
       //update item on main list
       update_MainList(Cursor_OnMAinList, context);
 
@@ -219,7 +215,6 @@ if (mQuantityValue>  0){
 //Update Item On Main List
     context.getContentResolver().update(uri, contentValues, null, null);
 
-    Toast.makeText(context, "ITem Updated ON MainList: " + quantityValue, Toast.LENGTH_SHORT).show();
 
   }
 
@@ -238,11 +233,9 @@ if (mQuantityValue>  0){
 
     int ItemQuantity_OnSellList = Cursor_SearchResult_SellList.getInt(ItemQuantity_OnSellList_ColumnIndex);
 
-    Log.i(LOG_TAG, "we are trying to updatethis item with this ID :"+itemId_OnSellList);
 
     //add quantity +1
       ItemQuantity_OnSellList ++;
-      Log.i(LOG_TAG, "new items is :" + ItemQuantity_OnSellList);
     //make ContentValue with new Quantity Value
       ContentValues contentValues = new ContentValues();
       contentValues.put(ItemsContract.ItemsEntry.COLUMN_QUANTITY, ItemQuantity_OnSellList);
@@ -254,7 +247,6 @@ if (mQuantityValue>  0){
 
 
 
-    Toast.makeText(context, "Item IS Going To Update " + itemId_OnSellList, Toast.LENGTH_SHORT).show();
 
 
   }
@@ -276,7 +268,6 @@ if (mQuantityValue>  0){
     Uri uri = context.getContentResolver().insert(ItemsContract.ItemsEntry.CONTENT_URI_SELL_LIST, contentValues);
 
 
-    Log.i("new item added", "in:" + uri);
 
 
   }

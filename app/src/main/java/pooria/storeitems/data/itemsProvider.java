@@ -94,7 +94,6 @@ public class itemsProvider extends ContentProvider {
 //get number of uri matcher ! is ITEMS=100 Or ITEM_ID=101 ?
     int match = sURI_MATCHER.match(uri);
 
-    Log.i(LOG_TAG, "Code IS :" + match);
 
 
     switch (match) {
@@ -115,8 +114,6 @@ public class itemsProvider extends ContentProvider {
         break;
 //if code is 101 get information of a specific Item
       case ITEM_ID:
-        Log.i(LOG_TAG, "we are Item_ID");
-        Log.i(LOG_TAG, "we are Item_ID");
         // For the ITEM_ID code, extract out the ID from the URI.
         // For an example URI such as "content://pooria.storeitems/items/3",
         // the selection will be "_id=?" and the selection argument will be a
@@ -131,7 +128,6 @@ public class itemsProvider extends ContentProvider {
 
         //get quary for a item
         cursor = sqLiteDatabase.query(ItemsContract.ItemsEntry.TABLE_NAME_ITEMS, projection, selection, selectionArgs, null, null, sortOrder);
-        Log.i(LOG_TAG, "we are curosr" + cursor);
 
         break;
 //else throw in execption
@@ -145,7 +141,6 @@ public class itemsProvider extends ContentProvider {
       case SELL_ITEM_ID:
 
         cursor=sqLiteDatabase.query(ItemsContract.ItemsEntry.TABLE_NAME_SELL_LIST,projection,selection,selectionArgs,null,null,sortOrder);
-        Log.i(LOG_TAG, "we did cursor on item provider with this count: " + cursor);
 
         break;
       default:
@@ -197,12 +192,10 @@ public class itemsProvider extends ContentProvider {
 
       case ITEMS:
         //if is uri in for of Items Table go to Insert new Items
-        Log.i(LOG_TAG, "uri is :" + match);
         return insertItem(uri, values,ITEMS);
       //else Uri is invalid throw in exception
 
       case SELL_ITEMS:
-        Log.i(LOG_TAG, "uri is :" + match);
 
         return insertItem(uri,values,SELL_ITEMS);
 
@@ -219,9 +212,7 @@ public class itemsProvider extends ContentProvider {
     //check name validation
 if (contentValues.containsKey(ItemsContract.ItemsEntry.COLUMN_NAME) ){
       String name = contentValues.getAsString(ItemsContract.ItemsEntry.COLUMN_NAME);
-      Log.i(LOG_TAG, "name is :" + name);
       if (name == null || name.isEmpty()) {
-        Log.e(LOG_TAG, "name is null");
         throw new IllegalArgumentException("Item requared a name ");
       }
     }
@@ -229,9 +220,7 @@ if (contentValues.containsKey(ItemsContract.ItemsEntry.COLUMN_NAME) ){
     //check price validation
     if (contentValues.containsKey(ItemsContract.ItemsEntry.COLUMN_PRICE)){
     int price = contentValues.getAsInteger(ItemsContract.ItemsEntry.COLUMN_PRICE);
-    Log.i(LOG_TAG, "number is :" + price);
     if (price <= 0) {
-      Log.i(LOG_TAG, "number is invalid");
 
       throw new IllegalArgumentException("Items Number is Invalid");
     }}
@@ -240,9 +229,7 @@ if (contentValues.containsKey(ItemsContract.ItemsEntry.COLUMN_NAME) ){
     //check quantity validation
     if (contentValues.containsKey(ItemsContract.ItemsEntry.COLUMN_QUANTITY)){
     int quantity = contentValues.getAsInteger(ItemsContract.ItemsEntry.COLUMN_QUANTITY);
-    Log.i(LOG_TAG, "quantity is :" + quantity);
     if (quantity < 0) {
-      Log.i(LOG_TAG, "quantity is invalid");
 
       throw new IllegalArgumentException("Items quantity is Invalid");
     }}
@@ -250,7 +237,6 @@ if (contentValues.containsKey(ItemsContract.ItemsEntry.COLUMN_NAME) ){
     //check shopperNumber validation
     if (contentValues.containsKey(ItemsContract.ItemsEntry.COLUMN_SUPPLIER)){
     int shoperNumber = contentValues.getAsInteger(ItemsContract.ItemsEntry.COLUMN_SUPPLIER);
-    Log.i(LOG_TAG, "shopper is :" + shoperNumber);
 
     if (shoperNumber < 0 || !ItemsContract.ItemsEntry.isValidShoper(shoperNumber)) {
 
@@ -261,7 +247,6 @@ if (contentValues.containsKey(ItemsContract.ItemsEntry.COLUMN_NAME) ){
 if (contentValues.containsKey(ItemsContract.ItemsEntry.COLUMN_CATEGORY)){
 
   int category=contentValues.getAsInteger(ItemsContract.ItemsEntry.COLUMN_CATEGORY);
-  Log.i(LOG_TAG,"Category is :"+category);
 
 }
   }

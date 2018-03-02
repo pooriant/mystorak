@@ -91,34 +91,32 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     categorySpinnerAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
 
     mCategorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                                                 @Override
-                                                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                                                  String selection=(String) parent.getItemAtPosition(position);
+      @Override
+      public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        String selection = (String) parent.getItemAtPosition(position);
 
-                                                   if (selection.equals(getString(R.string.tech_List))){
+        if (selection.equals(getString(R.string.tech_List))) {
 
-                                                     mCategoryNumber=0;
+          mCategoryNumber = 0;
 
-                                                   }else if (selection.equals(getString(R.string.clothes_List))){
+        } else if (selection.equals(getString(R.string.clothes_List))) {
 
-                                                     mCategoryNumber=1;
-                                                   }else if (selection.equals(getString(R.string.home_List))){
+          mCategoryNumber = 1;
+        } else if (selection.equals(getString(R.string.home_List))) {
 
-                                                     mCategoryNumber=2;
-                                                   }
+          mCategoryNumber = 2;
+        }
 
-                                                 }
+      }
 
-                                                 @Override
-                                                 public void onNothingSelected(AdapterView<?> parent) {
+      @Override
+      public void onNothingSelected(AdapterView<?> parent) {
 
-                                                 }
-                                               });
+      }
+    });
 
 
     mCategorySpinner.setAdapter(categorySpinnerAdapter);
-
-
 
 
     //active package manager for enable notification of permissions
@@ -171,7 +169,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
 
 
   }
-
 
 
   @Override
@@ -227,16 +224,13 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
 
           //get uri (Adress image ) from data
           Uri uri = data.getData();
-          Log.i(LOG_TAG, "data is :" + uri.getPath());
-//make input stream
+          //make input stream
           InputStream inputStream = null;
           try {
             //save input steram from uri
             inputStream = getContentResolver().openInputStream(uri);
-            Log.i(LOG_TAG, "data is :" + inputStream);
-//decode stream and save make bitmap
+            //decode stream and save make bitmap
             Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-            Log.i(LOG_TAG, "data is :" + bitmap.toString());
 
 
             imageViewFrame.setImageBitmap(bitmap);
@@ -253,9 +247,9 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
 
           //if data equal to this get data and save as bitmap
         case TAKE_PHOTO_RESULT:
-//get extras from data
+          //get extras from data
           Bundle extras = data.getExtras();
-//make bitmap from extras
+          //make bitmap from extras
           Bitmap bitmap = (Bitmap) extras.get("data");
 
           imageViewFrame.setImageBitmap(bitmap);
@@ -298,7 +292,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
 
       //if imageInByte is null means we dont change image from camera or gallery so we need to save image again to array
 
-      Log.i(LOG_TAG, "we are here" + imageInByte);
       //get image from image View as drawable
       Drawable drawable = imageViewFrame.getDrawable();
 
@@ -327,10 +320,9 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
       //insert item into database
       Uri uri = getContentResolver().insert(ItemsContract.ItemsEntry.CONTENT_URI, contentValue);
 
-      Log.i(LOG_TAG, "" + uri);
       Toast.makeText(this, "Your ITem Saved", Toast.LENGTH_SHORT).show();
     }
-      //uri exist and we should to update this pat
+    //uri exist and we should to update this pat
     else {
       //do update method and getback number of row that updated
       int rowUpdated = getContentResolver().update(uri, contentValue, null, null);
@@ -360,7 +352,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
 
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
-    Log.e("item", "is: " + item.getItemId());
     super.onOptionsItemSelected(item);
 //if menu item equal to submit button do insert method and finish activity
     if (item.getItemId() == R.id.submit_button) {
@@ -386,7 +377,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
       ItemsContract.ItemsEntry.COLUMN_DESCRIPTION,
       ItemsContract.ItemsEntry.COLUMN_PRICE,
       ItemsContract.ItemsEntry.COLUMN_QUANTITY,
-     // ItemsContract.ItemsEntry.COLUMN_SUPPLIER,
+      // ItemsContract.ItemsEntry.COLUMN_SUPPLIER,
       ItemsContract.ItemsEntry.COLUMN_CATEGORY,
       ItemsContract.ItemsEntry.COLUMN_IMAGE};
 
@@ -404,17 +395,13 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     int discriptionIndex = data.getColumnIndex(ItemsContract.ItemsEntry.COLUMN_DESCRIPTION);
     int priceIndex = data.getColumnIndex(ItemsContract.ItemsEntry.COLUMN_PRICE);
     int quantityIndex = data.getColumnIndex(ItemsContract.ItemsEntry.COLUMN_QUANTITY);
-  //  int supplierIndex = data.getColumnIndex(ItemsContract.ItemsEntry.COLUMN_SUPPLIER);
     int categoryIndex = data.getColumnIndex(ItemsContract.ItemsEntry.COLUMN_CATEGORY);
-    Log.i(LOG_TAG, "categoryIndexInCursor" + categoryIndex);
 
     int imageIndex = data.getColumnIndex(ItemsContract.ItemsEntry.COLUMN_IMAGE);
-    Log.i(LOG_TAG, "name is :" + data.getColumnIndex(ItemsContract.ItemsEntry.COLUMN_DESCRIPTION));
 
 //means if cursor is not empty and it has at least a row as first row ,cursor can  do  this command ! cursor in default is -1 and we must send thair to 1 to start check data
     try {
       if (data.moveToFirst()) {
-        Log.e(LOG_TAG, "" + data.getPosition());
         // Extract out the value from the Cursor for the given column index
 
         String name = data.getString(nameIndex);
@@ -433,7 +420,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         imageViewFrame.setImageBitmap(bitmap);
 
 
-       // int supplier = data.getInt(supplierIndex);
+        // int supplier = data.getInt(supplierIndex);
 
         int category = data.getInt(categoryIndex);
 
@@ -448,7 +435,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         discriptionBox.setText(discription);
         priceBox.setText(String.valueOf(price));
         quantityBox.setText(String.valueOf(quantity));
-
 
 
       }
