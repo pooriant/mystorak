@@ -40,7 +40,7 @@ TextView textView;
 
     getLoaderManager().initLoader(0, null, this);
 
-
+//set empty view when user doesnt select any item in list
     ListView listView = (ListView) findViewById(R.id.items_list_view);
 listView.setEmptyView(findViewById(R.id.emptyView));
     itemsAdapter = new ItemsAdapter(this, null);
