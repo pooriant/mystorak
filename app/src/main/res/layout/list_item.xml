@@ -76,7 +76,7 @@
             android:textStyle="bold"
             android:textColor="@color/colorPrimaryDark"
             android:textSize="32sp"
-            android:id="@+id/:price_item"
+            android:id="@+id/price_item"
             />
         <LinearLayout
             android:layout_width="0dp"

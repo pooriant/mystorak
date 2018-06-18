@@ -28,11 +28,23 @@
                       android:value=".MainActivity"/>
         </activity>
 
+
+        <activity android:name=".HistoryActivity"
+                  android:parentActivityName=".MainActivity">
+
+            <meta-data android:name="android.support.PARENT_ACTIVITY"
+            android:value=".MainActivity"/>
+
+        </activity>
+
+
+
+
         <activity android:name=".ShopListActivity"
                   android:parentActivityName=".MainActivity"/>
         <provider
             android:authorities="pooria.storeitems"
-            android:name=".data.itemsProvider"
+            android:name=".data.ItemsProvider"
             android:exported="false"/>
 
 

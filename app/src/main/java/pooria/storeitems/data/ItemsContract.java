@@ -50,6 +50,7 @@ public class ItemsContract {
   final static String PATH_ITEMS="items";
 
 final static String PATH_SELL="sell_basket";
+final static String PATH_HISTORY_ITEMS="total_history";
 
 
 
@@ -71,6 +72,10 @@ public final static class ItemsEntry implements BaseColumns{
   // content uri for access sell items data in provider
 
   public final static Uri CONTENT_URI_SELL_LIST=Uri.withAppendedPath(BASE_CONTENT_URI,PATH_SELL);
+
+  public final static Uri CONTENT_URI_ORDER_HISTORY_LIST=Uri.withAppendedPath(BASE_CONTENT_URI,PATH_HISTORY_ITEMS);
+
+
 
   //content://pooria.storeitems/sell_basket
 
@@ -121,10 +126,28 @@ public static final String CONTENT_LIST_TYPE=
 
 
 
+  //content list types for sell activity
+
+
+  public static final String CONTENT_LIST_TYPE_FOR_ORDER_HISTORY=
+    ContentResolver.CURSOR_DIR_BASE_TYPE +"/"+CONTENT_AUTHORITY+"/"+CONTENT_URI_ORDER_HISTORY_LIST;
+  //       vnd.android.cursor.dir/pooria.storeitems.data/sell_basket
+
+
+
+  /**
+   * The MIME type of the {@link #CONTENT_URI} for a single sell item.
+   */
+  public static final String CONTENT_ITEM_TYPE_FOR_ORDER_HISTORY_ITEM=
+    ContentResolver.CURSOR_ITEM_BASE_TYPE +"/" + CONTENT_AUTHORITY+ "/" + CONTENT_URI_ORDER_HISTORY_LIST;
+  //       vnd.android.cursor.item/pooria.storeitems.data/sell_basket
+
+
   /* names of database Table for Items */
 
   public final static String TABLE_NAME_ITEMS ="items";
   public final static String TABLE_NAME_SELL_LIST ="sellitems";
+  public final static String TABLE_NAME_ORDER_HISTORY_LIST="orderhistory";
 
   /**
    * Unique ID number for item in table (only for use in database table);
@@ -161,6 +184,9 @@ public static final String CONTENT_LIST_TYPE=
    */
   public final static String COLUMN_IMAGE="image";
   public final static String COLUMN_QUANTITY="quantity";
+
+  public static final String COLUMN_DATE="date";
+
   /**
    * Supplier of item
    * only Values possible are {@link #shopper1},{@link #shopper2} or {@link #shopper3};

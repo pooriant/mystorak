@@ -25,17 +25,17 @@ import pooria.storeitems.R;
  */
 
 
-public class ItemsAdapter extends CursorAdapter {
+public class HomeListAdapter extends CursorAdapter {
   private ItemsDbHelper dbHelper;
   private String mNameValue;
- private  int mCategoryValue;
- private  int mPriceValue;
- private  byte imageInByte[];
- private  int mQuantityValue;
+  private int mCategoryValue;
+  private int mPriceValue;
+  private byte imageInByte[];
+  private int mQuantityValue;
 
-  private final String LOG_TAG = ItemsAdapter.class.getName();
+  private final String LOG_TAG = HomeListAdapter.class.getName();
 
-  public ItemsAdapter(Context context, Cursor c) {
+  public HomeListAdapter(Context context, Cursor c) {
     super(context, c, 0/*flag*/);
     dbHelper = new ItemsDbHelper(context);
 
@@ -44,6 +44,7 @@ public class ItemsAdapter extends CursorAdapter {
   @Override
   public View newView(Context context, Cursor cursor, ViewGroup parent) {
     //make new view for items until either display be full of data or data for new view has been finished
+    Log.i(LOG_TAG, "in Adapter");
 
     return LayoutInflater.from(context).inflate(R.layout.list_item, parent, false);
 
@@ -62,7 +63,7 @@ public class ItemsAdapter extends CursorAdapter {
     TextView titleView = (TextView) view.findViewById(R.id.title_item);
     TextView sellerView = (TextView) view.findViewById(R.id.seller_name);
     ImageView imageView = (ImageView) view.findViewById(R.id.image_frame_for_item);
-    TextView priceView = (TextView) view.findViewById(R.id._price_item);
+    TextView priceView = (TextView) view.findViewById(R.id.price_item);
     TextView quantityView = (TextView) view.findViewById(R.id.quantity_item);
 
 
@@ -78,13 +79,13 @@ public class ItemsAdapter extends CursorAdapter {
     final int quantityId = cursor.getColumnIndex(ItemsContract.ItemsEntry.COLUMN_QUANTITY);
 
 
-    //get image id
+//    //get image id
     imageInByte = cursor.getBlob(imageId);
-    //get byteInputStream of imageByteArray
+//    //get byteInputStream of imageByteArray
     ByteArrayInputStream inputStream = new ByteArrayInputStream(imageInByte);
-    //decode stream from to ake bitmap
+//    //decode stream from to ake bitmap
     Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-    //set image as bitmap
+//    //set image as bitmap
     imageView.setImageBitmap(bitmap);
 
 
@@ -105,7 +106,7 @@ public class ItemsAdapter extends CursorAdapter {
       sellerView.setText(R.string.home_List);
     }
 
-
+    Log.i("name", "is" + mNameValue);
     titleView.setText(mNameValue);
 
     mPriceValue = cursor.getInt(priceId);
@@ -144,17 +145,16 @@ public class ItemsAdapter extends CursorAdapter {
       mQuantityValue = Cursor_OnMAinList.getInt(Cursor_OnMAinList.getColumnIndex(ItemsContract.ItemsEntry.COLUMN_QUANTITY));
 
 
+      if (mQuantityValue > 0) {
 
-if (mQuantityValue>  0){
+        //check item for update or add to Sell List and Main List
+        addOrUpdateItem_MainList_SellList(context, Cursor_OnMAinList);
 
-  //check item for update or add to Sell List and Main List
-  addOrUpdateItem_MainList_SellList(context ,Cursor_OnMAinList);
-
-} else{
+      } else {
 // quantity of item is 0 so we cant add to sell
-    Toast.makeText(context, "you cant do this", Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, "you cant do this", Toast.LENGTH_SHORT).show();
 
-}
+      }
 
     } catch (IllegalArgumentException exception) {
       Toast.makeText(context, exception.getMessage(), Toast.LENGTH_SHORT).show();
@@ -162,8 +162,7 @@ if (mQuantityValue>  0){
   }
 
 
-
-  private void addOrUpdateItem_MainList_SellList(Context context, Cursor Cursor_OnMAinList){
+  private void addOrUpdateItem_MainList_SellList(Context context, Cursor Cursor_OnMAinList) {
 
     //result of search on Sell list, if we have this item on list result is 1 or above then is -1 because we dont have this item on list and should to add on our list
     Cursor Cursor_SearchReslut_SellList = searchItem_SellList(context, mNameValue);
@@ -201,7 +200,7 @@ if (mQuantityValue>  0){
     int quantityValue = cursor_OnMainList.getInt(quantityValueId);
 
 
-    quantityValue --;
+    quantityValue--;
 
 //make Item Uri for update
     Uri uri = ContentUris.withAppendedId(ItemsContract.ItemsEntry.CONTENT_URI, ID);
@@ -235,18 +234,14 @@ if (mQuantityValue>  0){
 
 
     //add quantity +1
-      ItemQuantity_OnSellList ++;
+    ItemQuantity_OnSellList++;
     //make ContentValue with new Quantity Value
-      ContentValues contentValues = new ContentValues();
-      contentValues.put(ItemsContract.ItemsEntry.COLUMN_QUANTITY, ItemQuantity_OnSellList);
+    ContentValues contentValues = new ContentValues();
+    contentValues.put(ItemsContract.ItemsEntry.COLUMN_QUANTITY, ItemQuantity_OnSellList);
     //make uri For Update On Sell List
-      Uri itemUri = ContentUris.withAppendedId(ItemsContract.ItemsEntry.CONTENT_URI_SELL_LIST, itemId_OnSellList);
+    Uri itemUri = ContentUris.withAppendedId(ItemsContract.ItemsEntry.CONTENT_URI_SELL_LIST, itemId_OnSellList);
 //update Item On Sell List
-      int rowUpdated = context.getContentResolver().update(itemUri, contentValues, null, null);
-
-
-
-
+      context.getContentResolver().update(itemUri, contentValues, null, null);
 
 
   }
@@ -263,11 +258,9 @@ if (mQuantityValue>  0){
     contentValues.put(ItemsContract.ItemsEntry.COLUMN_QUANTITY, 1);
     contentValues.put(ItemsContract.ItemsEntry.COLUMN_IMAGE, imageInByte);
     contentValues.put(ItemsContract.ItemsEntry.COLUMN_PRICE, mPriceValue);
-//Add Item To Sell List
+    //Add Item To Sell List
 
-    Uri uri = context.getContentResolver().insert(ItemsContract.ItemsEntry.CONTENT_URI_SELL_LIST, contentValues);
-
-
+    context.getContentResolver().insert(ItemsContract.ItemsEntry.CONTENT_URI_SELL_LIST, contentValues);
 
 
   }
@@ -276,6 +269,7 @@ if (mQuantityValue>  0){
 
     //search ITem On Sell List Where NAME is = (itemFor search)>>that item's name we want to search
     String selection = ItemsContract.ItemsEntry.COLUMN_NAME + "=?";
+
     String[] selectionArgs = new String[]{itemForSearch};
 
     //make a query on Sell List for finding item with name above

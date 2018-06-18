@@ -17,6 +17,9 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.LoaderManager;
 
 import android.support.v4.content.CursorLoader;
@@ -40,6 +43,11 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.lang.reflect.Array;
+import java.sql.Time;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import pooria.storeitems.data.ItemsContract;
 import pooria.storeitems.data.ItemsDbHelper;
@@ -54,6 +62,8 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
   private static final String LOG_TAG = EditorActivity.class.getSimpleName();
   private static final int IMAGE_LOAD_RESULT = 200;
   private static final int TAKE_PHOTO_RESULT = 400;
+  private static final String TAG_HOMEPAGE = "tag_home";
+
   //list of global variables
   private int mShopperNumber;
   private int mCategoryNumber;
@@ -71,7 +81,9 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
   byte imageInByte[];
 
   ArrayAdapter categorySpinnerAdapter;
-
+EditText mNewCategory;
+Button mAddCategory;
+  List < String > arrays = new ArrayList<>();
 
   @Override
   protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -85,9 +97,40 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     priceBox = (EditText) findViewById(R.id.pricebox);
     quantityBox = (EditText) findViewById(R.id.quantitybox);
     mCategorySpinner = (Spinner) findViewById(R.id.category_list_item);
+mNewCategory=(EditText)findViewById(R.id.insert_category);
+
+mAddCategory=(Button)findViewById(R.id.save_category);
 
 
-    categorySpinnerAdapter = ArrayAdapter.createFromResource(EditorActivity.this, R.array.Category_list, android.R.layout.simple_spinner_item);
+    arrays.add("pc");
+    arrays.add("mac");
+    arrays.add("asus");
+
+
+    categorySpinnerAdapter= new ArrayAdapter<>(this,android.R.layout.simple_spinner_item,arrays);
+
+
+
+    mAddCategory.setOnClickListener(new View.OnClickListener() {
+                                  @Override
+                                  public void onClick(View v) {
+
+                                    if (mNewCategory.getText()!=null){
+                                      Log.i(LOG_TAG,"IS NOT NULL");
+                                      arrays.add(mNewCategory.getText().toString());
+mNewCategory.setText("");
+mCategorySpinner.setAdapter(categorySpinnerAdapter);
+                                    }
+
+                                  }
+                                });
+
+
+
+
+    //categorySpinnerAdapter = ArrayAdapter.createFromResource(EditorActivity.this, arrays, android.R.layout.simple_spinner_item);
+
+
     categorySpinnerAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
 
     mCategorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -240,6 +283,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             break;
           } catch (FileNotFoundException e) {
             e.printStackTrace();
+            break;
           }
 
 
@@ -284,7 +328,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     //get input items
     String name = nameBox.getText().toString().trim();
     String discription = discriptionBox.getText().toString().trim();
-    int price = Integer.valueOf(priceBox.getText().toString().trim());
+    int price = Integer.parseInt(priceBox.getText().toString().trim());
     int quantity = Integer.valueOf(quantityBox.getText().toString().trim());
     if (imageInByte == null) {
 
@@ -313,13 +357,16 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
 
     contentValue.put(ItemsContract.ItemsEntry.COLUMN_IMAGE, imageInByte);
 
+
     //if uri is null means we have new item and must to add into database
     if (uri == null) {
       //insert item into database
-      Uri uri = getContentResolver().insert(ItemsContract.ItemsEntry.CONTENT_URI, contentValue);
+      uri = getContentResolver().insert(ItemsContract.ItemsEntry.CONTENT_URI, contentValue);
 
       Toast.makeText(this, "Your ITem Saved", Toast.LENGTH_SHORT).show();
-    }
+
+
+      }
     //uri exist and we should to update this pat
     else {
       //do update method and getback number of row that updated
@@ -353,9 +400,13 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     super.onOptionsItemSelected(item);
 //if menu item equal to submit button do insert method and finish activity
     if (item.getItemId() == R.id.submit_button) {
+
+
       //insert();
       saveItem();
-      finish();
+
+       finish();
+
     }
     if (item.getItemId() == R.id.delete_item) {
 
@@ -387,8 +438,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
   public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
     // Find the columns of pet attributes that we're interested in
 
-    int idColumnIndex = data.getColumnIndex(ItemsContract.ItemsEntry.ID);
-    int nameIndex = data.getColumnIndex(ItemsContract.ItemsEntry.COLUMN_NAME);
+     int nameIndex = data.getColumnIndex(ItemsContract.ItemsEntry.COLUMN_NAME);
     int discriptionIndex = data.getColumnIndex(ItemsContract.ItemsEntry.COLUMN_DESCRIPTION);
     int priceIndex = data.getColumnIndex(ItemsContract.ItemsEntry.COLUMN_PRICE);
     int quantityIndex = data.getColumnIndex(ItemsContract.ItemsEntry.COLUMN_QUANTITY);
@@ -451,6 +501,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
   public void onLoaderReset(Loader<Cursor> loader) {
 
   }
+
 
 }
 

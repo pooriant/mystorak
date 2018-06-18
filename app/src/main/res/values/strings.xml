@@ -6,8 +6,6 @@
     <string name="home_List">Home</string>
 
 
-
-
     <string name="tech_shop1">Apple</string>
     <string name="tech_shop2">Samsung</string>
     <string name="tech_shop3">Asus</string>
@@ -23,5 +21,14 @@
     <string name="Home_shop2">Village</string>
     <string name="Home_shop3">beach</string>
 
+    <string name="title_shop">Shop</string>
+    <string name="title_addItem">Add Item</string>
+    <string name="title_history">History</string>
+    <string name="title_setting">Setting</string>
+    <string name="title_basket">Basket</string>
+    <string name="title_profile">Profile</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

@@ -1,164 +1,163 @@
 package pooria.storeitems;
 
-import android.app.LoaderManager;
-import android.content.ContentUris;
 import android.content.ContentValues;
-import android.content.CursorLoader;
 import android.content.Intent;
-import android.content.Loader;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
-import android.support.design.widget.FloatingActionButton;
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.CursorAdapter;
-import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import pooria.storeitems.data.ItemsAdapter;
+import java.util.ArrayList;
+import java.util.List;
+
+import pooria.storeitems.data.HomeListAdapter;
 import pooria.storeitems.data.ItemsContract;
-import pooria.storeitems.data.ItemsDbHelper;
 
-public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
-  private final static String LOG_TAG = MainActivity.class.getName();
-  TextView textView;
-  ItemsDbHelper itemsDbHelper;
-  CursorAdapter itemsAdapter;
+public class MainActivity extends AppCompatActivity {
+    private final static String LOG_TAG = MainActivity.class.getName();
+    CursorAdapter itemsAdapter;
 
-  @Override
-  protected void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    setContentView(R.layout.activity_main);
+     BottomNavigationView navigation;
+    private List<android.support.v4.app.Fragment> fragments = new ArrayList<>(5);
+    private static final String TAG_HISTORY = "tag_history";
+    private static final String TAG_HOMEPAGE = "tag_home";
+    private static final String TAG_ADDITEM = "tag_add_item";
+    private static final String TAG_PROFILE = "tag_profile";
+    private static final String TAG_BASKET = "tag_basket";
 
-    itemsDbHelper = new ItemsDbHelper(this);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main2);
 
-    getLoaderManager().initLoader(0, null, this);
-
-//set empty view when user doesnt select any item in list
-    ListView listView = (ListView) findViewById(R.id.items_list_view);
-    listView.setEmptyView(findViewById(R.id.emptyView));
-    itemsAdapter = new ItemsAdapter(this, null);
-    listView.setAdapter(itemsAdapter);
-    // displayDatabaseInfo();
-
-    FloatingActionButton actionButton = (FloatingActionButton) findViewById(R.id.floatingActionButton);
-    actionButton.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        Intent intent = new Intent(getApplicationContext(), EditorActivity.class);
-
-        startActivity(intent);
-
-      }
-    });
-
-
-    listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-      @Override
-      public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Intent intent = new Intent(MainActivity.this, EditorActivity.class);
-        Uri uri = ContentUris.withAppendedId(ItemsContract.ItemsEntry.CONTENT_URI, id);
-        intent.setData(uri);
-        startActivity(intent);
-
-      }
-    });
-
-  }
+        //  itemsDbHelper = new ItemsDbHelper(this);
+        itemsAdapter = new HomeListAdapter(this, null);
+        navigation = (BottomNavigationView) findViewById(R.id.bottom_navigation);
 
 
 
+//    listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//      @Override
+//      public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//        Intent intent = new Intent(MainActivity.this, EditorActivity.class);
+//        Uri uri = ContentUris.withAppendedId(ItemsContract.ItemsEntry.CONTENT_URI, id);
+//        intent.setData(uri);
+//        startActivity(intent);
+//
+//      }
+//    });
 
-  private void InserPet() {
-    ContentValues contentValues = new ContentValues();
+        navigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
 
-    contentValues.put(ItemsContract.ItemsEntry.COLUMN_NAME, "ZenBook");
-    contentValues.put(ItemsContract.ItemsEntry.COLUMN_DESCRIPTION, "Is Very Nice Book");
-    contentValues.put(ItemsContract.ItemsEntry.COLUMN_PRICE, 500);
-    contentValues.put(ItemsContract.ItemsEntry.COLUMN_QUANTITY, 52);
-    contentValues.put(ItemsContract.ItemsEntry.COLUMN_SUPPLIER, 1);
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                int Id = item.getItemId();
 
+                switch (Id) {
+                    case R.id.title_Home_List:
+                        setTitle("Main List");
 
-    Uri uri = getContentResolver().insert(ItemsContract.ItemsEntry.CONTENT_URI, contentValues);
+                        switchFragment(0, TAG_HOMEPAGE);
+                        return true;
+                    case R.id.title_addItem:
 
+                        //     Toast.makeText(MainActivity.this, "Add Item Clicked", Toast.LENGTH_SHORT).show();          return true;
+                        //switchFragment(1, TAG_ADDITEM);
+                        Intent intent = new Intent(MainActivity.this, EditorActivity.class);
+                        startActivity(intent);
 
-  }
+                        return true;
+                    case R.id.title_history:
+                        setTitle("History");
 
+                        //   Toast.makeText(MainActivity.this, "History Clicked", Toast.LENGTH_SHORT).show();          return true;
+                        switchFragment(2, TAG_HISTORY);
+                        return true;
+                    case R.id.title_Basket:
+                        // Toast.makeText(MainActivity.this, "setting Clicked", Toast.LENGTH_SHORT).show();          return true;
+                        setTitle("Basket");
+                        switchFragment(3, TAG_BASKET);
 
-  @Override
-  public boolean onCreateOptionsMenu(Menu menu) {
-    // Inflate the menu options from the res/menu/menu_editor.xml file.
-    // This adds menu items to the app bar.
-    getMenuInflater().inflate(R.menu.main_menu, menu);
-    return super.onCreateOptionsMenu(menu);
-  }
+                        return true;
+                    case R.id.title_profile:
+                        setTitle("Profile");
 
+                        switchFragment(4, TAG_PROFILE);
+                        //Toast.makeText(MainActivity.this, "profile Clicked", Toast.LENGTH_SHORT).show();          return true;
 
-  @Override
-  public boolean onOptionsItemSelected(MenuItem item) {
-//check if menu item is delete button then delete list;
-    if (item.getItemId() == R.id.delete_button) {
-      deleteList();
-      //read again database to update list
-//displayDatabaseInfo();
-    }
-    if (item.getItemId() == R.id.insert) {
-      InserPet();
-    }
-    if (item.getItemId() == R.id.basket) {
+                        return true;
+                }
+                return false;
+            }
+        });
 
-      Intent intent = new Intent(this, ShopListActivity.class);
-      startActivity(intent);
+        buildFragmentsList();
 
+        switchFragment(0, TAG_HOMEPAGE);
     }
 
-    return super.onOptionsItemSelected(item);
-  }
+
+    private void switchFragment(int pos, String tag) {
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragment_frame, fragments.get(pos), tag)
+                .commit();
+    }
 
 
-  //delete list
-  private void deleteList() {
-    int id = getContentResolver().delete(ItemsContract.ItemsEntry.CONTENT_URI, null, null);
+    private void buildFragmentsList() {
+        HomeListFragment homeListFragment = new HomeListFragment();
+        ShopListFragment shopListFragment = new ShopListFragment();
+        HistoryListFragment HistoryFragment = new HistoryListFragment();
+        emptyFragment ProfileFragment = buildFragment("PROFILE");
+
+        fragments.add(homeListFragment);
+        fragments.add(new AddItemFragment());
+        fragments.add(HistoryFragment);
+        fragments.add(shopListFragment);
+        fragments.add(ProfileFragment);
 
 
-  }
+    }
+
+    private emptyFragment buildFragment(String title) {
+        return emptyFragment.newInstance(title);
+
+    }
 
 
-  @Override
-  public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+    //delete list
+    private void deleteList() {
+        getContentResolver().delete(ItemsContract.ItemsEntry.CONTENT_URI, null, null);
 
 
-    String[] projection = new String[]{ItemsContract.ItemsEntry.ID,
-      ItemsContract.ItemsEntry.COLUMN_NAME,
-      ItemsContract.ItemsEntry.COLUMN_DESCRIPTION,
-      ItemsContract.ItemsEntry.COLUMN_PRICE,
-      ItemsContract.ItemsEntry.COLUMN_QUANTITY,
-      ItemsContract.ItemsEntry.COLUMN_CATEGORY,
-      ItemsContract.ItemsEntry.COLUMN_IMAGE};
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+            navigation.setSelectedItemId(R.id.title_Home_List);
 
 
-    return new CursorLoader(this, ItemsContract.ItemsEntry.CONTENT_URI, projection, null, null, null);
+    }
 
-  }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.i(LOG_TAG,"OnPause");
 
-  @Override
-  public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-    itemsAdapter.swapCursor(data);
+    }
 
-
-  }
-
-  @Override
-  public void onLoaderReset(Loader<Cursor> loader) {
-    itemsAdapter.swapCursor(null);
-
-  }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    Log.i(LOG_TAG,"OnDestroy");
+    }
 }
 

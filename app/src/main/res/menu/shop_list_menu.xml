@@ -4,6 +4,6 @@
 
 
     <item android:id="@+id/delete_basket"
-          android:title="delete"
+          android:title="پاک کردن لیست"
           app:showAsAction="always"/>
 </menu>

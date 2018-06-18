@@ -62,6 +62,18 @@ public class ItemsDbHelper extends SQLiteOpenHelper {
       +ItemsEntry.COLUMN_CATEGORY+ " INTEGER NOT NULL, "
       +ItemsEntry.COLUMN_IMAGE+ " BLOB );" ;
 
+    String SQL_CREATE_ORDER_HISTORY_TABLE="CREATE TABLE "+ItemsEntry.TABLE_NAME_ORDER_HISTORY_LIST +"("
+    +ItemsEntry.ID +" INTEGER PRIMARY KEY AUTOINCREMENT, "
+      +ItemsEntry.COLUMN_NAME + " TEXT NOT NULL, "
+      +ItemsEntry.COLUMN_PRICE + " INTEGER NOT NULL, "
+      +ItemsEntry.COLUMN_QUANTITY + " INTEGER NOT NULL, "
+    +ItemsEntry.COLUMN_CATEGORY + " INTEGER NOT NULL, "
+      +ItemsEntry.COLUMN_IMAGE+ " BLOB, "
+      +ItemsEntry.COLUMN_DATE + " LONG NOT NULL );";
+
+
+    db.execSQL(SQL_CREATE_ORDER_HISTORY_TABLE);
+
     // Execute the SQL statement
     db.execSQL(SQL_CREATE_ITEMS_TABLE);
 

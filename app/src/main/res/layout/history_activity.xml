@@ -11,14 +11,14 @@
         android:orientation="vertical">
 
         <ListView
-            android:id="@+id/sell_list_view"
+            android:id="@+id/history_list_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/storeitems_empty"
+            android:id="@+id/storeitems"
             android:orientation="vertical">
 
             <ImageView
@@ -42,8 +42,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="ChekOut"
+        android:text="Clear History"
         android:id="@+id/btn_order"
-         />
+        android:onClick="clearHistoryClicked"/>
 
 </LinearLayout>
