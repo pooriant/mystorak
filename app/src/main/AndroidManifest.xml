@@ -42,6 +42,11 @@
 
         <activity android:name=".ShopListActivity"
                   android:parentActivityName=".MainActivity"/>
+
+
+        <activity android:name=".Category.CategoryActivity"
+            android:parentActivityName=".EditorActivity"/>
+
         <provider
             android:authorities="pooria.storeitems"
             android:name=".data.ItemsProvider"

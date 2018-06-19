@@ -17,9 +17,6 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.LoaderManager;
 
 import android.support.v4.content.CursorLoader;
@@ -37,18 +34,17 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.lang.reflect.Array;
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
+import pooria.storeitems.Category.CategoryActivity;
 import pooria.storeitems.data.ItemsContract;
 import pooria.storeitems.data.ItemsDbHelper;
 
@@ -62,6 +58,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
   private static final String LOG_TAG = EditorActivity.class.getSimpleName();
   private static final int IMAGE_LOAD_RESULT = 200;
   private static final int TAKE_PHOTO_RESULT = 400;
+  private static final int GET_CATEGORY_RESULT = 300;
   private static final String TAG_HOMEPAGE = "tag_home";
 
   //list of global variables
@@ -81,9 +78,11 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
   byte imageInByte[];
 
   ArrayAdapter categorySpinnerAdapter;
-EditText mNewCategory;
 Button mAddCategory;
   List < String > arrays = new ArrayList<>();
+TextView mMyCategory;
+
+
 
   @Override
   protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -97,30 +96,40 @@ Button mAddCategory;
     priceBox = (EditText) findViewById(R.id.pricebox);
     quantityBox = (EditText) findViewById(R.id.quantitybox);
     mCategorySpinner = (Spinner) findViewById(R.id.category_list_item);
-mNewCategory=(EditText)findViewById(R.id.insert_category);
+
 
 mAddCategory=(Button)findViewById(R.id.save_category);
 
+mMyCategory=(TextView)findViewById(R.id.my_category);
 
-    arrays.add("pc");
-    arrays.add("mac");
-    arrays.add("asus");
+mMyCategory.setOnClickListener(new View.OnClickListener() {
+                                 @Override
+                                 public void onClick(View v) {
+                                  Intent getCategoryIntent=new Intent(EditorActivity.this,CategoryActivity.class);
+                                  startActivityForResult(getCategoryIntent,GET_CATEGORY_RESULT);
 
 
-    categorySpinnerAdapter= new ArrayAdapter<>(this,android.R.layout.simple_spinner_item,arrays);
+                                 }
+                               });
 
+//        arrays.add("pc");
+//    arrays.add("mac");
+//    arrays.add("asus");
+//
+//
+//    categorySpinnerAdapter= new ArrayAdapter<>(this,android.R.layout.simple_spinner_item,arrays);
+//
 
 
     mAddCategory.setOnClickListener(new View.OnClickListener() {
                                   @Override
                                   public void onClick(View v) {
 
-                                    if (mNewCategory.getText()!=null){
-                                      Log.i(LOG_TAG,"IS NOT NULL");
-                                      arrays.add(mNewCategory.getText().toString());
-mNewCategory.setText("");
-mCategorySpinner.setAdapter(categorySpinnerAdapter);
-                                    }
+//                                    if (mNewCategory.getText() != null) {
+//                                      Log.i(LOG_TAG, "IS NOT NULL");
+//                                      arrays.add(mNewCategory.getText().toString());
+//                                      mCategorySpinner.setAdapter(categorySpinnerAdapter);
+//                                    }
 
                                   }
                                 });
@@ -131,36 +140,36 @@ mCategorySpinner.setAdapter(categorySpinnerAdapter);
     //categorySpinnerAdapter = ArrayAdapter.createFromResource(EditorActivity.this, arrays, android.R.layout.simple_spinner_item);
 
 
-    categorySpinnerAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
-
-    mCategorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-      @Override
-      public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        String selection = (String) parent.getItemAtPosition(position);
-
-        if (selection.equals(getString(R.string.tech_List))) {
-
-          mCategoryNumber = 0;
-
-        } else if (selection.equals(getString(R.string.clothes_List))) {
-
-          mCategoryNumber = 1;
-        } else if (selection.equals(getString(R.string.home_List))) {
-
-          mCategoryNumber = 2;
-        }
-
-      }
-
-      @Override
-      public void onNothingSelected(AdapterView<?> parent) {
-
-      }
-    });
-
-
-    mCategorySpinner.setAdapter(categorySpinnerAdapter);
-
+//    categorySpinnerAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
+//
+//    mCategorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//      @Override
+//      public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+//        String selection = (String) parent.getItemAtPosition(position);
+//
+//        if (selection.equals(getString(R.string.tech_List))) {
+//
+//          mCategoryNumber = 0;
+//
+//        } else if (selection.equals(getString(R.string.clothes_List))) {
+//
+//          mCategoryNumber = 1;
+//        } else if (selection.equals(getString(R.string.home_List))) {
+//
+//          mCategoryNumber = 2;
+//        }
+//
+//      }
+//
+//      @Override
+//      public void onNothingSelected(AdapterView<?> parent) {
+//
+//      }
+//    });
+//
+//
+//    mCategorySpinner.setAdapter(categorySpinnerAdapter);
+//
 
     //active package manager for enable notification of permissions
     packageManager = getBaseContext().getPackageManager();
@@ -298,6 +307,13 @@ mCategorySpinner.setAdapter(categorySpinnerAdapter);
 
           //save bitmap to byte array
           saveBitmapInByteArray(bitmap);
+          break;
+
+        case GET_CATEGORY_RESULT:
+
+          String category=data.getStringExtra("category");
+
+          mMyCategory.setText(category);
           break;
       }
     }

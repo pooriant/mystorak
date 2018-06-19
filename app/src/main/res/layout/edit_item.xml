@@ -195,11 +195,16 @@
                android:id="@+id/category_list_item"
 android:spinnerMode="dropdown"
                />
-<EditText
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:text=""
-    android:id="@+id/insert_category"/>
+
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:minWidth="100dp"
+                android:minHeight="100dp"
+                android:layout_height="wrap_content"
+                android:background="@color/colorPrimaryLight"
+                android:id="@+id/my_category"/>
         </LinearLayout>
 <Button
     android:layout_width="wrap_content"
