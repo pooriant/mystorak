@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="pooria.storeitems">
+    package="pooria.storeitems">
 
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
@@ -14,46 +14,44 @@
         android:theme="@style/AppTheme">
         <activity android:name=".MainActivity">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".EditorActivity"
-            android:parentActivityName=".MainActivity"
+        <activity
+            android:name=".EditorActivity"
+            android:parentActivityName=".MainActivity">
 
-            >
-            <!--parent activity meta-data to support 4.0 and lower    -->
-           <meta-data android:name="android.support.PARENT_ACTIVITY"
-                      android:value=".MainActivity"/>
+            <!-- parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
         </activity>
-
-
-        <activity android:name=".HistoryActivity"
-                  android:parentActivityName=".MainActivity">
-
-            <meta-data android:name="android.support.PARENT_ACTIVITY"
-            android:value=".MainActivity"/>
-
+        <activity
+            android:name=".HistoryActivity"
+            android:parentActivityName=".MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
         </activity>
-
-
-
-
-        <activity android:name=".ShopListActivity"
-                  android:parentActivityName=".MainActivity"/>
-
-
-        <activity android:name=".Category.CategoryActivity"
-            android:parentActivityName=".EditorActivity"/>
+        <activity
+            android:name=".ShopListActivity"
+            android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".Category.CategoryActivity"
+            android:parentActivityName=".EditorActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".EditorActivity" />
+        </activity>
 
         <provider
-            android:authorities="pooria.storeitems"
             android:name=".data.ItemsProvider"
-            android:exported="false"/>
+            android:authorities="pooria.storeitems"
+            android:exported="false" />
 
-
-
+        <activity android:name=".Category.InsertNewCategory"></activity>
     </application>
 
 </manifest>

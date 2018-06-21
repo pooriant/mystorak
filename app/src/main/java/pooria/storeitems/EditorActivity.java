@@ -28,8 +28,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -62,8 +60,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
   private static final String TAG_HOMEPAGE = "tag_home";
 
   //list of global variables
-  private int mShopperNumber;
-  private int mCategoryNumber;
+   private int mCategoryNumber;
   EditText nameBox;
   EditText discriptionBox;
   EditText priceBox;
@@ -77,8 +74,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
   PackageManager packageManager;
   byte imageInByte[];
 
-  ArrayAdapter categorySpinnerAdapter;
-Button mAddCategory;
+ Button mAddCategory;
   List < String > arrays = new ArrayList<>();
 TextView mMyCategory;
 
@@ -105,71 +101,16 @@ mMyCategory=(TextView)findViewById(R.id.my_category);
 mMyCategory.setOnClickListener(new View.OnClickListener() {
                                  @Override
                                  public void onClick(View v) {
-                                  Intent getCategoryIntent=new Intent(EditorActivity.this,CategoryActivity.class);
+                                  Intent getCategoryIntent=new Intent(EditorActivity.this, CategoryActivity.class);
                                   startActivityForResult(getCategoryIntent,GET_CATEGORY_RESULT);
 
 
                                  }
                                });
 
-//        arrays.add("pc");
-//    arrays.add("mac");
-//    arrays.add("asus");
-//
-//
-//    categorySpinnerAdapter= new ArrayAdapter<>(this,android.R.layout.simple_spinner_item,arrays);
-//
-
-
-    mAddCategory.setOnClickListener(new View.OnClickListener() {
-                                  @Override
-                                  public void onClick(View v) {
-
-//                                    if (mNewCategory.getText() != null) {
-//                                      Log.i(LOG_TAG, "IS NOT NULL");
-//                                      arrays.add(mNewCategory.getText().toString());
-//                                      mCategorySpinner.setAdapter(categorySpinnerAdapter);
-//                                    }
-
-                                  }
-                                });
 
 
 
-
-    //categorySpinnerAdapter = ArrayAdapter.createFromResource(EditorActivity.this, arrays, android.R.layout.simple_spinner_item);
-
-
-//    categorySpinnerAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
-//
-//    mCategorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-//      @Override
-//      public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-//        String selection = (String) parent.getItemAtPosition(position);
-//
-//        if (selection.equals(getString(R.string.tech_List))) {
-//
-//          mCategoryNumber = 0;
-//
-//        } else if (selection.equals(getString(R.string.clothes_List))) {
-//
-//          mCategoryNumber = 1;
-//        } else if (selection.equals(getString(R.string.home_List))) {
-//
-//          mCategoryNumber = 2;
-//        }
-//
-//      }
-//
-//      @Override
-//      public void onNothingSelected(AdapterView<?> parent) {
-//
-//      }
-//    });
-//
-//
-//    mCategorySpinner.setAdapter(categorySpinnerAdapter);
-//
 
     //active package manager for enable notification of permissions
     packageManager = getBaseContext().getPackageManager();
@@ -309,10 +250,11 @@ mMyCategory.setOnClickListener(new View.OnClickListener() {
           saveBitmapInByteArray(bitmap);
           break;
 
+          //if data is equal to CategoryName
         case GET_CATEGORY_RESULT:
-
-          String category=data.getStringExtra("category");
-
+//save CategoryName as a String
+          String category=data.getStringExtra("Category");
+//set that name in CategoryBox
           mMyCategory.setText(category);
           break;
       }
@@ -441,8 +383,7 @@ mMyCategory.setOnClickListener(new View.OnClickListener() {
       ItemsContract.ItemsEntry.COLUMN_DESCRIPTION,
       ItemsContract.ItemsEntry.COLUMN_PRICE,
       ItemsContract.ItemsEntry.COLUMN_QUANTITY,
-      // ItemsContract.ItemsEntry.COLUMN_SUPPLIER,
-      ItemsContract.ItemsEntry.COLUMN_CATEGORY,
+       ItemsContract.ItemsEntry.COLUMN_CATEGORY,
       ItemsContract.ItemsEntry.COLUMN_IMAGE};
 
     return new CursorLoader(this, uri, projection, null, null, null);
@@ -483,7 +424,6 @@ mMyCategory.setOnClickListener(new View.OnClickListener() {
         imageViewFrame.setImageBitmap(bitmap);
 
 
-        // int supplier = data.getInt(supplierIndex);
 
         int category = data.getInt(categoryIndex);
 
@@ -518,6 +458,23 @@ mMyCategory.setOnClickListener(new View.OnClickListener() {
 
   }
 
+  @Override
+  protected void onStop() {
+    Log.i(LOG_TAG,"onStop");
+    super.onStop();
+  }
 
+  @Override
+  protected void onPause() {
+    Log.i(LOG_TAG,"onPause");
+    super.onPause();
+  }
+
+  @Override
+  protected void onDestroy() {
+    Log.i(LOG_TAG,"onDestroy");
+    super.onDestroy();
+  }
 }
+
 
