@@ -1,32 +1,35 @@
 package pooria.storeitems.Category;
 
-import android.app.Activity;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.CursorAdapter;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 
-import pooria.storeitems.EditorActivity;
 import pooria.storeitems.R;
+import pooria.storeitems.data.ItemsContract;
 
 
-public class CategoryActivity extends AppCompatActivity implements CategoryAdapter.CategoryAdapterOnClickHandler {
+public class CategoryActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
     Toast toast;
     private static final String LOG_TAG = CategoryActivity.class.getSimpleName();
     private static final int NEW_CATEGORY_CODE = 500;
-    private ArrayList<String> CategoryNames;
-    CategoryAdapter adapter;
+    ListView listView;
+     CursorAdapter adapterCursor;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -35,50 +38,21 @@ public class CategoryActivity extends AppCompatActivity implements CategoryAdapt
         setContentView(R.layout.category_activity);
 
 
-        CategoryNames = new ArrayList<>();
-        Log.i(LOG_TAG, "OnCreate STart");
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        adapter = new CategoryAdapter(CategoryNames, this);
+         Log.i(LOG_TAG, "OnCreate STart");
+
+        adapterCursor = new CategoryCursorAdapter(this, null);
+        listView = findViewById(R.id.categoryRecyclerViewList);
+
+        listView.setAdapter(adapterCursor);
 
 
-        RecyclerView recyclerView = findViewById(R.id.categoryRecyclerViewList);
 
-        recyclerView.setLayoutManager(linearLayoutManager);
-        recyclerView.setHasFixedSize(true);
-
-        recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
-        papolateCategory();
-
-        recyclerView.setAdapter(adapter);
+         getSupportLoaderManager().initLoader(0, null, this);
 
 
     }
 
 
-    private void papolateCategory() {
-
-        CategoryNames.add("Tech");
-        CategoryNames.add("Samsung");
-        CategoryNames.add("Apple");
-        CategoryNames.add("LG");
-        CategoryNames.add("ASUS");
-        adapter.notifyDataSetChanged();
-    }
-
-    @Override
-    public void onClick(String Title) {
-        if (toast != null) {
-            toast.cancel();
-        }
-        toast = Toast.makeText(this, "Your Category Is :" + Title, Toast.LENGTH_SHORT);
-
-        toast.show();
-
-        Intent intent = new Intent(this, EditorActivity.class);
-        intent.putExtra("Category", Title);
-        setResult(Activity.RESULT_OK, intent);
-        finish();
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -101,31 +75,38 @@ public class CategoryActivity extends AppCompatActivity implements CategoryAdapt
     }
 
 
+    @NonNull
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == Activity.RESULT_OK) {
-
-            switch (requestCode) {
-                case NEW_CATEGORY_CODE:
-
-String newCategory=data.getStringExtra("title");
-CategoryNames.add(newCategory);
-adapter.notifyDataSetChanged();
-
-                    break;
+    public Loader<Cursor> onCreateLoader(int id, @Nullable Bundle args) {
 
 
-                    default:
-
-                    break;
-            }
-        }
+        return new CursorLoader(this, ItemsContract.ItemsEntry.CONTENT_URI_CATEGORY_LIST, null, null, null, null);
+    }
 
 
-        super.onActivityResult(requestCode, resultCode, data);
+    @Override
+    public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
+
+        adapterCursor.swapCursor(data);
 
 
     }
 
+    @Override
+    public void onLoaderReset(@NonNull Loader<Cursor> loader) {
 
+    }
+
+    @Override
+    protected void onResume() {
+
+        super.onResume();
+
+
+    }
+
+    @Override
+    protected void onRestart() {
+         super.onRestart();
+    }
 }
