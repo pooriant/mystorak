@@ -35,6 +35,10 @@ public class ItemsProvider extends ContentProvider {
   public static final int ORDER_HISTORY_LIST_ID = 400;
   public static final int ORDER_HISTORY_LIST_ITEM_ID = 401;
 
+  public static final int CATEGORY_LIST_ID=500;
+  public static final int CATEGORY_LIST_ITEM_ID=501;
+
+
   /**
    * use this code to match a content uri to a corresponding uri
    * the input passed into the constractor represent the code to return for this class
@@ -75,6 +79,15 @@ public class ItemsProvider extends ContentProvider {
 
     sURI_MATCHER.addURI(ItemsContract.CONTENT_AUTHORITY, ItemsContract.PATH_HISTORY_ITEMS, ORDER_HISTORY_LIST_ID);
     sURI_MATCHER.addURI(ItemsContract.CONTENT_AUTHORITY, ItemsContract.PATH_HISTORY_ITEMS + "/#", ORDER_HISTORY_LIST_ITEM_ID);
+
+
+
+    sURI_MATCHER.addURI(ItemsContract.CONTENT_AUTHORITY, ItemsContract.PATH_CATEGORY_LIST, CATEGORY_LIST_ID);
+    // content://pooria.storeitems/category_list
+
+    sURI_MATCHER.addURI(ItemsContract.CONTENT_AUTHORITY, ItemsContract.PATH_CATEGORY_LIST + "/#", CATEGORY_LIST_ITEM_ID);
+    // content://pooria.storeitems/category_list/3
+
 
   }
 
@@ -156,6 +169,20 @@ Log.i("ItemProvider","Query");
         Log.i("ItemProvider","ORDER_HISTORY_LIST_ID"+cursor.getCount());
 
         break;
+
+      case CATEGORY_LIST_ID:
+        cursor=sqLiteDatabase.query(ItemsContract.ItemsEntry.TABLE_NAME_CATEGORY_LIST,projection,selection,selectionArgs,null,null,sortOrder,null);
+        Log.i("ItemProvider","CATEGORY_LIST_ID: "+cursor.getCount());
+
+        break;
+
+
+      case CATEGORY_LIST_ITEM_ID:
+        cursor=sqLiteDatabase.query(ItemsContract.ItemsEntry.TABLE_NAME_CATEGORY_LIST,projection,selection,selectionArgs,null,null,sortOrder,null);
+        Log.i("ItemProvider","CATEGORY_LIST_ITEM_ID"+cursor.getCount());
+
+        break;
+
       default:
         throw new IllegalArgumentException("Cannot query unknown URI " + uri);
 
@@ -169,6 +196,8 @@ Log.i("ItemProvider","Query");
 
     return cursor;
   }
+
+
 
   @Nullable
   @Override
@@ -268,6 +297,9 @@ Log.i("ItemProvider","Query");
         return insertItem(uri, values, SELL_ITEMS);
 
 
+      case CATEGORY_LIST_ID:
+        return insertItem(uri,values,CATEGORY_LIST_ID);
+
       default:
         throw new IllegalArgumentException("Uri is Invalid");
     }
@@ -317,7 +349,7 @@ Log.i("ItemProvider","Query");
 
     if (contentValues.containsKey(ItemsContract.ItemsEntry.COLUMN_CATEGORY)) {
 
-      int category = contentValues.getAsInteger(ItemsContract.ItemsEntry.COLUMN_CATEGORY);
+      String category = contentValues.getAsString(ItemsContract.ItemsEntry.COLUMN_CATEGORY);
 
     }
   }
@@ -331,40 +363,52 @@ Log.i("ItemProvider","Query");
     SQLiteDatabase sqLiteDatabase = dbHelper.getWritableDatabase();
     //insert a new item to Items table and get back row's number
 
-    if (URI_ID == ITEMS) {
-      id = sqLiteDatabase.insert(ItemsContract.ItemsEntry.TABLE_NAME_ITEMS, null, contentValues);
+    switch (URI_ID){
 
-      if (id == -1) {
-        Toast.makeText(getContext(), "Error In Adding Item To DB" + id, Toast.LENGTH_SHORT).show();
-      } else {
-        Toast.makeText(getContext(), "Added was successful" + id, Toast.LENGTH_SHORT).show();
-      }
+      case ITEMS:
+        id = sqLiteDatabase.insert(ItemsContract.ItemsEntry.TABLE_NAME_ITEMS, null, contentValues);
+
+        if (id == -1) {
+          Toast.makeText(getContext(), "Error In Adding Item To DB" + id, Toast.LENGTH_SHORT).show();
+        } else {
+          Toast.makeText(getContext(), "Added was successful" + id, Toast.LENGTH_SHORT).show();
+        }
+     break;
+      case SELL_ITEMS:
+        id = sqLiteDatabase.insert(ItemsContract.ItemsEntry.TABLE_NAME_SELL_LIST, null, contentValues);
+        if (id == -1) {
+          Toast.makeText(getContext(), "Error In Adding Item To DB" + id, Toast.LENGTH_SHORT).show();
+        } else {
+          Toast.makeText(getContext(), "Added was successful" + id, Toast.LENGTH_SHORT).show();
+        }
+        break;
+
+      case ORDER_HISTORY_LIST_ID:
+
+        id = sqLiteDatabase.insert(ItemsContract.ItemsEntry.TABLE_NAME_ORDER_HISTORY_LIST, null, contentValues);
+        if (id == -1) {
+          Toast.makeText(getContext(), "Error In Adding Item To ORDER HISTORY LIST" + id, Toast.LENGTH_SHORT).show();
+        } else {
+          Toast.makeText(getContext(), "Added was successful TO ORDER HISTORY" + id, Toast.LENGTH_SHORT).show();
+
+        }
+    break;
+
+      case CATEGORY_LIST_ID:
+
+        id=sqLiteDatabase.insert(ItemsContract.ItemsEntry.TABLE_NAME_CATEGORY_LIST,null,contentValues);
+
+        if (id==-1){
+          Toast.makeText(getContext(), "Error in Adding To Category List", Toast.LENGTH_SHORT).show();
+        }else {
+
+          Toast.makeText(getContext(), "Added Was Successful To Category List", Toast.LENGTH_SHORT).show();
+        }
+
+        break;
     }
 
-    if (URI_ID == SELL_ITEMS) {
 
-      id = sqLiteDatabase.insert(ItemsContract.ItemsEntry.TABLE_NAME_SELL_LIST, null, contentValues);
-      if (id == -1) {
-        Toast.makeText(getContext(), "Error In Adding Item To DB" + id, Toast.LENGTH_SHORT).show();
-      } else {
-        Toast.makeText(getContext(), "Added was successful" + id, Toast.LENGTH_SHORT).show();
-      }
-
-    }
-
-
-    if (URI_ID == ORDER_HISTORY_LIST_ID) {
-
-
-      id = sqLiteDatabase.insert(ItemsContract.ItemsEntry.TABLE_NAME_ORDER_HISTORY_LIST, null, contentValues);
-      if (id == -1) {
-        Toast.makeText(getContext(), "Error In Adding Item To ORDER HISTORY LIST" + id, Toast.LENGTH_SHORT).show();
-      } else {
-        Toast.makeText(getContext(), "Added was successful TO ORDER HISTORY" + id, Toast.LENGTH_SHORT).show();
-
-      }
-
-    }
     // Notify all listeners that the data has changed for the item content URI
     getContext().getContentResolver().notifyChange(uri, null);
 
