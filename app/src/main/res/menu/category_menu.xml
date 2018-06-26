@@ -8,4 +8,8 @@
         app:showAsAction="always"
 android:title="InsertNewCategory"
         />
+
+    <item android:id="@+id/delete_category"
+        android:title="delete Category List"
+        app:showAsAction="never"/>
 </menu>

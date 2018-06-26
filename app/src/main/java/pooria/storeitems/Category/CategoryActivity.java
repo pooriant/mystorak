@@ -1,10 +1,12 @@
 package pooria.storeitems.Category;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -49,9 +51,7 @@ public class CategoryActivity extends AppCompatActivity implements LoaderManager
 
          getSupportLoaderManager().initLoader(0, null, this);
 
-
-    }
-
+     }
 
 
     @Override
@@ -70,6 +70,13 @@ public class CategoryActivity extends AppCompatActivity implements LoaderManager
             Intent intent = new Intent(CategoryActivity.this, InsertNewCategory.class);
             startActivityForResult(intent, NEW_CATEGORY_CODE);
 
+        }if(item.getItemId()==R.id.delete_category){
+
+            int rowDetelet=getContentResolver().delete(ItemsContract.ItemsEntry.CONTENT_URI_CATEGORY_LIST,null,null);
+
+            if (rowDetelet>0){
+                Toast.makeText(this, "Your List Deleted Successfully", Toast.LENGTH_SHORT).show();
+            }
         }
         return super.onOptionsItemSelected(item);
     }

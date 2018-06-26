@@ -218,6 +218,12 @@ Log.i("ItemProvider","Query");
       case SELL_ITEM_ID:
         return ItemsContract.ItemsEntry.CONTENT_ITEM_TYPE_FOR_SELL;
 
+      case CATEGORY_LIST_ID:
+
+        return ItemsContract.ItemsEntry.CONTENT_LIST_TYPE_FOR_CATEGORY_LIST;
+
+      case CATEGORY_LIST_ITEM_ID:
+        return ItemsContract.ItemsEntry.CONTENT_ITEM_TYPE_FOR_CATEGORY_LIST_ITEM;
       default:
         throw new IllegalArgumentException("Unknown URI " + uri + " with match " + match);
     }
@@ -433,7 +439,11 @@ Log.i("ItemProvider","Query");
     if (URI_ID==ORDER_HISTORY_LIST_ID){
 
       rowDeleted=sqLiteDatabase.delete(ItemsContract.ItemsEntry.TABLE_NAME_ORDER_HISTORY_LIST,selection,selectionArgs);
+    }if (URI_ID==CATEGORY_LIST_ITEM_ID || URI_ID==CATEGORY_LIST_ID){
+
+      rowDeleted=sqLiteDatabase.delete(ItemsContract.ItemsEntry.TABLE_NAME_CATEGORY_LIST,selection,selectionArgs);
     }
+
 
     getContext().getContentResolver().notifyChange(uri, null);
 
@@ -475,6 +485,16 @@ Log.i("ItemProvider","Query");
       case ORDER_HISTORY_LIST_ID:
         return deleteITem(uri,selection,selectionArgs,ORDER_HISTORY_LIST_ID);
 
+      case CATEGORY_LIST_ID:
+
+        return deleteITem(uri,selection,selectionArgs,CATEGORY_LIST_ID);
+
+      case CATEGORY_LIST_ITEM_ID:
+        selection = ItemsContract.ItemsEntry.ID + "=?";
+
+        selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
+        return deleteITem(uri,selection,selectionArgs,CATEGORY_LIST_ITEM_ID);
+
       default:
         throw new IllegalArgumentException("delete was failed");
     }
@@ -509,6 +529,16 @@ Log.i("ItemProvider","Query");
         selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
         return updateItem(uri, values, selection, selectionArgs, SELL_ITEM_ID);
 
+
+      case CATEGORY_LIST_ID:
+        return updateItem(uri,values,selection,selectionArgs,CATEGORY_LIST_ID);
+
+      case CATEGORY_LIST_ITEM_ID:
+        selection= ItemsContract.ItemsEntry.ID+ "=?";
+        selectionArgs=new String[]{String.valueOf(ContentUris.parseId(uri))};
+        return updateItem(uri,values,selection,selectionArgs,CATEGORY_LIST_ITEM_ID);
+
+
       default:
         throw new IllegalArgumentException("Update Failed");
     }
@@ -538,6 +568,14 @@ Log.i("ItemProvider","Query");
       rowUpdated = sqLiteDatabase.update(ItemsContract.ItemsEntry.TABLE_NAME_SELL_LIST, values, selection, selectionArgs);
 
     }
+
+    if (URI_ID==CATEGORY_LIST_ID ||URI_ID==CATEGORY_LIST_ITEM_ID){
+
+      rowUpdated=sqLiteDatabase.update(ItemsContract.ItemsEntry.TABLE_NAME_CATEGORY_LIST,values,selection,selectionArgs);
+    }
+
+
+
     //if row update set notify data changer
     if (rowUpdated != 0 && getContext() != null) {
       getContext().getContentResolver().notifyChange(uri, null);
