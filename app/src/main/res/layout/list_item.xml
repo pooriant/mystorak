@@ -18,10 +18,10 @@
 
 
         <ImageView
-            android:layout_width="142dp"
-            android:minHeight="106dp"
-            android:layout_height="wrap_content"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
             android:id="@+id/image_frame_for_item"
+            android:background="@color/colorPrimary"
             />
 
 <LinearLayout

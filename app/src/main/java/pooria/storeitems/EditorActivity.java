@@ -14,12 +14,14 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.LoaderManager;
 
 import android.support.v4.content.CursorLoader;
+import android.support.v4.content.FileProvider;
 import android.support.v4.content.Loader;
 
 import android.support.annotation.Nullable;
@@ -35,11 +37,19 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestBuilder;
+import com.bumptech.glide.request.RequestOptions;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import pooria.storeitems.Category.CategoryActivity;
@@ -58,6 +68,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     private static final int TAKE_PHOTO_RESULT = 400;
     private static final int GET_CATEGORY_RESULT = 300;
     private static final String TAG_HOMEPAGE = "tag_home";
+    static final int REQUEST_TAKE_PHOTO = 1;
 
     //list of global variables
     EditText nameBox;
@@ -72,8 +83,8 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     PackageManager packageManager;
     byte imageInByte[];
 
+    String mCurrentPhotoPath;
 
-    List<String> arrays = new ArrayList<>();
     TextView mMyCategory;
 
 
@@ -99,7 +110,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             }
         });
 
-
         //active package manager for enable notification of permissions
         packageManager = getBaseContext().getPackageManager();
 
@@ -113,11 +123,12 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         takePhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                dispatchTakePictureIntent();
 
-                Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-                    startActivityForResult(takePictureIntent, TAKE_PHOTO_RESULT);
-                }
+//                Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+//                if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+//                    startActivityForResult(takePictureIntent, TAKE_PHOTO_RESULT);
+//                }
             }
         });
 
@@ -203,34 +214,28 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
 
                     //get uri (Adress image ) from data
                     Uri uri = data.getData();
-                    //make input stream
-                    InputStream inputStream = null;
-                    try {
-                        //save input steram from uri
-                        inputStream = getContentResolver().openInputStream(uri);
-                        //decode stream and save make bitmap
-                        Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+                    Log.i(LOG_TAG,"Uri "+uri);
+
+                    //  Glide.with(this).load(uri).into(imageViewFrame);
+                    RequestOptions requestOptions = new RequestOptions();
+                    requestOptions.centerInside();
+
+                    Glide.with(this)
+                            .load(uri)
+                            .apply(requestOptions)
+                            .into(imageViewFrame);
 
 
-                        imageViewFrame.setImageBitmap(bitmap);
+                    break;
 
-
-                        //save bitmap to byte array for saving in database
-                        saveBitmapInByteArray(bitmap);
-
-                        break;
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                        break;
-                    }
-
-
-                    //if data equal to this get data and save as bitmap
+                //if data equal to this get data and save as bitmap
                 case TAKE_PHOTO_RESULT:
                     //get extras from data
+
                     Bundle extras = data.getExtras();
                     //make bitmap from extras
                     Bitmap bitmap = (Bitmap) extras.get("data");
+
 
                     imageViewFrame.setImageBitmap(bitmap);
 
@@ -238,11 +243,23 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                     saveBitmapInByteArray(bitmap);
                     break;
 
+                case REQUEST_TAKE_PHOTO:
+
+                    requestOptions = new RequestOptions();
+                    requestOptions.centerInside();
+
+                    Glide.with(this)
+                            .load(mCurrentPhotoPath)
+                            .apply(requestOptions)
+                            .into(imageViewFrame);
+galleryAddPic();
+
+                    break;
                 //if data is equal to CategoryName
                 case GET_CATEGORY_RESULT:
-//save CategoryName as a String
+                    //save CategoryName as a String
                     String category = data.getStringExtra("Category");
-//set that name in CategoryBox
+                    //set that name in CategoryBox
                     mMyCategory.setText(category);
                     break;
             }
@@ -460,6 +477,57 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         Log.i(LOG_TAG, "onDestroy");
         super.onDestroy();
     }
+
+
+    private File createImageFile() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+
+        // Save a file: path for use with ACTION_VIEW intents
+        mCurrentPhotoPath = image.getAbsolutePath();
+        Log.i(LOG_TAG,"CurrentPath"+mCurrentPhotoPath);
+        return image;
+    }
+
+    private void dispatchTakePictureIntent() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        // Ensure that there's a camera activity to handle the intent
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            // Create the File where the photo should go
+            File photoFile = null;
+            try {
+                photoFile = createImageFile();
+            } catch (IOException ex) {
+                // Error occurred while creating the File
+
+            }
+            // Continue only if the File was successfully created
+            if (photoFile != null) {
+                Uri photoURI = FileProvider.getUriForFile(this,
+                        "pooria.storeitems.fileprovider",
+                        photoFile);
+                Log.i(LOG_TAG,"URI PHOTO "+photoURI);
+
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
+            }
+        }
+    }
+    private void galleryAddPic() {
+        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+        File f = new File(mCurrentPhotoPath);
+        Uri contentUri = Uri.fromFile(f);
+        mediaScanIntent.setData(contentUri);
+        this.sendBroadcast(mediaScanIntent);
+    }
+
 }
 
 

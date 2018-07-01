@@ -51,6 +51,18 @@
             android:authorities="pooria.storeitems"
             android:exported="false" />
 
+
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="pooria.storeitems.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/path" />
+
+        </provider>
+
         <activity android:name=".Category.InsertNewCategory"></activity>
     </application>
 
